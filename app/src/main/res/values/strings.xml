@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">GreenDean</string>
+    <string name="account_hint">Please enter a user name</string>
+    <string name="pwd_hint">Please enter your password</string>
+    <string name="login">login</string>
+    <string name="register">register</string>
+    <string name="submit">submit</string>
+    <string name="userName">User Name</string>
+    <string name="input_name">Please input the name!</string>
+    <string name="Password">Password</string>
+    <string name="input_pwd">Please input the password!</string>
+    <string name="input_email">Please input the email address!</string>
+    <string name="email_address">Email Address</string>
 </resources>
