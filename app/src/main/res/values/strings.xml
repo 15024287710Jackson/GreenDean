@@ -11,4 +11,6 @@
     <string name="input_pwd">Please input the password!</string>
     <string name="input_email">Please input the email address!</string>
     <string name="email_address">Email Address</string>
+    <string name="telephoneNum">telephone Number</string>
+    <string name="input_tel">Please input the telephone Number!</string>
 </resources>

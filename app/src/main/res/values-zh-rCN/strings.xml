@@ -11,5 +11,7 @@
     <string name="Password">密码</string>
     <string name="input_pwd">请输入密码!</string>
     <string name="input_email">请输入邮箱地址！</string>
-    <string name="email_address">Email Address</string>
+    <string name="email_address">邮箱号码</string>
+    <string name="telephoneNum">电话号码</string>
+    <string name="input_tel">请输入电话号码!</string>
 </resources>
