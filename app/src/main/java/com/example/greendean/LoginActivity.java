@@ -29,6 +29,8 @@ public class LoginActivity extends AppCompatActivity {
     private final int SUCCESS = 1;
     private final int FAILURE = 0;
     private final int ERRORCODE = 2;
+    int login_result=0;
+    String user_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +58,8 @@ public class LoginActivity extends AppCompatActivity {
                             try {
                                 if(jsonObject.getString("result").equals("Y")){
                                     Toast.makeText(LoginActivity.this,jsonObject.getString("msg"), Toast.LENGTH_LONG).show();
+                                    login_result=1;
+                                    user_id=jsonObject.getString("id");
                                 }else{
                                     Toast.makeText(LoginActivity.this,jsonObject.getString("msg"), Toast.LENGTH_LONG).show();
                                 }
@@ -95,8 +99,14 @@ public class LoginActivity extends AppCompatActivity {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(intent);
+                            if(login_result==1){
+                                String userName = name;
+                                String userId = user_id;
+                                User user = new User(userId,userName);
+                                Intent intent = ChatActivity.newIntent(LoginActivity.this,user.toString());
+                                startActivity(intent);
+                                LoginActivity.this.finish();
+                            }
                         }
                     }, 500);
                 }
@@ -107,6 +117,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                     Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
                     startActivity(intent);
+                    LoginActivity.this.finish();
             }
         });
     }
