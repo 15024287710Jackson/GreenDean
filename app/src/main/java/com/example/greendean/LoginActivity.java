@@ -108,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                                 LoginActivity.this.finish();
                             }
                         }
-                    }, 500);
+                    }, 10);
                 }
             }
         });
@@ -164,7 +164,7 @@ public class LoginActivity extends AppCompatActivity {
         JSONObject jsonObject = null;
         int code;
         try{
-            String path = "http://109.166.36.56:54288/resgisterLogin/loginUser";
+            String path = "http://101.37.75.202:8081/resgisterLogin/loginUser";
             URL url = new URL(path);
             HttpURLConnection conn =(HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");

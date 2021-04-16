@@ -85,7 +85,7 @@ public class RegisterActivity extends AppCompatActivity {
         JSONObject jsonObject = null;
         int code;
         try{
-            String path = "http://109.166.36.56:54288/resgisterLogin/resgisterUser";
+            String path = "http://101.37.75.202:8081/resgisterLogin/resgisterUser";
             URL url = new URL(path);
             HttpURLConnection conn =(HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");

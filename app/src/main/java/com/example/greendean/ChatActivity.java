@@ -99,7 +99,7 @@ public class ChatActivity extends Activity {
                 .build();
 
         //定义request
-        Request request = new Request.Builder().url("ws://109.166.36.56:54288/test/"+userId).build();
+        Request request = new Request.Builder().url("ws://101.37.75.202:8081/test/"+userId).build();
         //绑定回调接口
         mOkHttpClient.newWebSocket(request, new EchoWebSocketListener());
         mOkHttpClient.dispatcher().executorService().shutdown();
