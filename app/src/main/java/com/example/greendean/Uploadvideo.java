@@ -1,48 +1,56 @@
 package com.example.greendean;
 
+
+
+
+
+import android.graphics.Bitmap;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import com.loopj.android.http.*;
+import cz.msebera.android.httpclient.*;
 
-public class Uploadvideo {
-    private JSONObject loginSql(String path,JSONObject json)  {
-        JSONObject jsonObject = null;
-        int code;
-        try{
-//            String path = "http://109.166.36.56:54288/resgisterLogin/loginUser";
-            URL url = new URL(path);
-            HttpURLConnection conn =(HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json; utf-8");
-            conn.setConnectTimeout(5000);
-            conn.setRequestProperty("Accept", "application/json");
-            conn.setDoOutput(true);
-//            JSONObject json = new JSONObject();
-//            json.put("userName", edit_name);
-//            json.put("passWord", edit_pwd);
-            String jsonString = json.toString();
-            OutputStream os = conn.getOutputStream();
-            byte[] input = jsonString.getBytes("utf-8");
-            os.write(input, 0, input.length);
-            System.out.println(conn.getResponseCode());
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
-            StringBuilder response = new StringBuilder();
-            String responseLine = null;
-            while ((responseLine = br.readLine()) != null) {
-                response.append(responseLine.trim());
+
+
+
+public class Uploadvideo extends VideoPlayer{
+
+
+    public void sendImage(Bitmap bm)
+    {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.PNG, 60, stream);
+        byte[] bytes = stream.toByteArray();
+        String img = new String(Base64.encodeToString(bytes, Base64.DEFAULT));
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.add("img", img);
+
+        client.post("http://101.37.75.202:8081/upLoadFile/upLoadPic", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, Header[] headers, byte[] bytes) {
+                Toast.makeText(getApplicationContext(), "Upload Success!", Toast.LENGTH_LONG).show();
+
             }
-            System.out.println(response.toString());
-            if(conn.getResponseCode()==200){
-                String str = response.toString();
-                jsonObject= new JSONObject(str);
+            @Override
+            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+                Toast.makeText(getApplicationContext(), "Upload Fail!", Toast.LENGTH_LONG).show();
             }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return jsonObject;
+        });
+
     }
 }

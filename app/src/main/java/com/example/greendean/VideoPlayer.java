@@ -2,6 +2,8 @@ package com.example.greendean;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import android.media.MediaPlayer;
@@ -9,30 +11,67 @@ import android.net.Uri;
 
 import android.os.Environment;
 
+import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
+import android.widget.Toast;
+import com.example.greendean.Uploadvideo;
+
 
 
 public class VideoPlayer extends AppCompatActivity {
 
+    private static final int TAKE_PHOTO_ID = 0;
+    private Button button;
+
+
+
     private VideoView videoView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
         bindViews();
+        button = (Button) findViewById(R.id.take_photo);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, TAKE_PHOTO_ID);
+            }
+
+        });
+
     }
 
-    private void bindViews() {
+
+
+
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == TAKE_PHOTO_ID) {
+            if (data != null && data.hasExtra("data")) {
+                Bitmap bitmap = data.getParcelableExtra("data");
+                Uploadvideo k = new Uploadvideo();
+                k.sendImage(bitmap);
+                Toast.makeText(getApplicationContext(), "Picture has been taken", Toast.LENGTH_LONG).show();
+            }
+        }
+        bindViews();
+    }
+
+
+
+    void bindViews() {
         videoView = findViewById(R.id.videoview);
 
-        /**播放 res/raw 目录下的文件
-         * android.resource:// ：前缀固定
-         * com.example.administrator.helloworld：为当前类的所在的包路径，可以使用 String packageName = getPackageName(); 动态获取
-         * R.raw.la_isla：最后接 res/raw 目录中的文件名
-         * */
+
         videoView.setVideoURI(Uri.parse("http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8"));
 
         /**
