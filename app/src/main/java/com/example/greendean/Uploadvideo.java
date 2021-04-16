@@ -38,7 +38,9 @@ public class Uploadvideo extends VideoPlayer{
         String img = new String(Base64.encodeToString(bytes, Base64.DEFAULT));
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
-        params.add("img", img);
+        params.add("file", img);
+        params.add("id", "123");
+        params.add("Message", "picture");
 
         client.post("http://101.37.75.202:8081/upLoadFile/upLoadPic", params, new AsyncHttpResponseHandler() {
             @Override
