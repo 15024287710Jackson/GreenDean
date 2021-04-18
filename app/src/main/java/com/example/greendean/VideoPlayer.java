@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import android.media.MediaPlayer;
@@ -20,14 +21,26 @@ import android.widget.MediaController;
 import android.widget.VideoView;
 import android.widget.Toast;
 import com.example.greendean.Uploadvideo;
+import com.loopj.android.http.HttpGet;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.client.ClientProtocolException;
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 
 
 public class VideoPlayer extends AppCompatActivity {
 
     private static final int TAKE_PHOTO_ID = 0;
-    private Button button;
+    private Button button1,button2,button3;
+    private String strurlbase = "http://101.37.75.202:8081/";
+    private String strurl = "";
 
+    int cnt = 0;
 
 
     private VideoView videoView;
@@ -38,14 +51,49 @@ public class VideoPlayer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
         bindViews();
-        button = (Button) findViewById(R.id.take_photo);
-        button.setOnClickListener(new View.OnClickListener() {
+        button1 = (Button) findViewById(R.id.take_photo);
+        button1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent, TAKE_PHOTO_ID);
             }
 
         });
+
+        button2 = (Button) findViewById(R.id.previous);
+        button2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if(cnt <= 0){
+                    Toast.makeText(VideoPlayer.this,"This is the first video!",Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    cnt--;
+                }
+                strurl = strurlbase + Integer.toString(cnt) +".mp4";
+                bindViews();
+            }
+
+        });
+
+
+        button3 = (Button) findViewById(R.id.next);
+        button3.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if(cnt >= 100){
+                    Toast.makeText(VideoPlayer.this,"This is the last video!",Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    cnt++;
+                }
+                strurl = strurlbase + Integer.toString(cnt) +".mp4";
+                bindViews();
+            }
+
+        });
+
+
+
+
 
     }
 
@@ -68,11 +116,15 @@ public class VideoPlayer extends AppCompatActivity {
 
 
 
+
+
+
+
     void bindViews() {
         videoView = findViewById(R.id.videoview);
 
 
-        videoView.setVideoURI(Uri.parse("http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8"));
+        videoView.setVideoURI(Uri.parse(strurl));
 
         /**
          * 为 VideoView 视图设置媒体控制器，设置了之后就会自动由进度条、前进、后退等操作
