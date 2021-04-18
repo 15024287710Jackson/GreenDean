@@ -60,6 +60,12 @@ public class LoginActivity extends AppCompatActivity {
                                     Toast.makeText(LoginActivity.this,jsonObject.getString("msg"), Toast.LENGTH_LONG).show();
                                     login_result=1;
                                     user_id=jsonObject.getString("id");
+                                    String userName = name;
+                                    String userId = user_id;
+                                    User user = new User(userId,userName);
+                                    Intent intent = ChatActivity.newIntent(LoginActivity.this,user.toString());
+                                    startActivity(intent);
+                                    LoginActivity.this.finish();
                                 }else{
                                     Toast.makeText(LoginActivity.this,jsonObject.getString("msg"), Toast.LENGTH_LONG).show();
                                 }
@@ -96,19 +102,6 @@ public class LoginActivity extends AppCompatActivity {
 //                            }
 //                        }
 //                    }.start();
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(login_result==1){
-                                String userName = name;
-                                String userId = user_id;
-                                User user = new User(userId,userName);
-                                Intent intent = ChatActivity.newIntent(LoginActivity.this,user.toString());
-                                startActivity(intent);
-                                LoginActivity.this.finish();
-                            }
-                        }
-                    }, 10);
                 }
             }
         });
