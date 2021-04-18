@@ -1,13 +1,9 @@
 package com.example.greendean;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -28,15 +25,20 @@ import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 
-public class ChatActivity extends Activity {
+public class privatechatActivity extends Activity {
     private ArrayList<User> mUserArrayList = new ArrayList<>();//定义一个存储信息的列表
+    private ArrayList<User> touxiangList = new ArrayList<>();
     private EditText mInputText;//输入框
     private Button mSend;//发送按钮
     private RecyclerView mRecyclerView;//滑动框
+    private ChooseAdapter selectionAdapter;
     private UserAdapter mAdapter;//适配器
+    private ChooseAdapter mAdapter2;
+    private TextView mOnlinenum;
     private boolean backFlag = false;
     private WebSocket mSocket;
-    private Button privatesend;
+    private RecyclerView mSelectionView;
+
 
 
     private User mUser;;//全局User
@@ -44,10 +46,15 @@ public class ChatActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
+        setContentView(R.layout.activity_privatechat);
         initView();
 
-        
+
+        //申请userlist
+
+        //getUserList();
+
+
 
         String data = getIntent().getStringExtra("data");
         if (!data.equals("")){
@@ -62,9 +69,15 @@ public class ChatActivity extends Activity {
         mAdapter = new UserAdapter(mUserArrayList);
         mRecyclerView.setAdapter(mAdapter);
 
+
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);
+        mSelectionView.setLayoutManager(layoutManager2);
+        mAdapter2 = new ChooseAdapter(touxiangList);
+        mSelectionView.setAdapter(mAdapter2);
+
+
         //开启连接
         start(mUser.getUserId());
-
 
 
 
@@ -83,17 +96,6 @@ public class ChatActivity extends Activity {
                 }
             }
         });
-
-        privatesend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent mintent = privatechatActivity.newIntent(ChatActivity.this,mUser.toString());
-                startActivity(mintent);
-            }
-        });
-
-
 
 
     }
@@ -125,7 +127,6 @@ public class ChatActivity extends Activity {
         mOkHttpClient.newWebSocket(request, new EchoWebSocketListener());
         mOkHttpClient.dispatcher().executorService().shutdown();
 
-
     }
 
     /**
@@ -145,17 +146,18 @@ public class ChatActivity extends Activity {
      * 初始化界面
      * */
     private void initView(){
-        mInputText = findViewById(R.id.input_text);
-        mSend = findViewById(R.id.send);
-        privatesend = findViewById(R.id.privatechat);
-        mRecyclerView = findViewById(R.id.msg_recycler_view);
+        mInputText = findViewById(R.id.input_text_private);
+        mSend = findViewById(R.id.send_private);
+        mRecyclerView = findViewById(R.id.msg_recycler_view_private);
+        mSelectionView = findViewById(R.id.privateselection);
+        mOnlinenum = findViewById(R.id.onlinenum);
     }
 
     /**
      * 静态方法返回一个能启动自己的intent
      * */
     public static Intent newIntent(Context context, String data){
-        Intent intent = new Intent(context,ChatActivity.class);
+        Intent intent = new Intent(context,privatechatActivity.class);
         intent.putExtra("data",data);
         return intent;
     }
@@ -166,13 +168,15 @@ public class ChatActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event){
         if(keyCode==KeyEvent.KEYCODE_BACK&&!backFlag){
-            Toast.makeText(ChatActivity.this,"再按一次退出聊天窗口",Toast.LENGTH_SHORT).show();
+            Toast.makeText(privatechatActivity.this,"再按一次退出私聊",Toast.LENGTH_SHORT).show();
             backFlag = true;
             return true;
         }else {
             return super.onKeyDown(keyCode, event);
         }
     }
+
+
 
     /**
      * 内部类，监听web socket回调
@@ -183,12 +187,12 @@ public class ChatActivity extends Activity {
         public void onOpen(WebSocket webSocket, Response response) {
             super.onOpen(webSocket, response);
             mSocket = webSocket;    //实例化web socket
-            //传送本用户头像及名字
-            Msg msg777 = new Msg(true,"PaSsThEtOuXiAnGhEmInGzI",false);
-            User tempUser777 = new User(mUser.getUserId(),mUser.getUserName(),R.drawable.boy,msg777);
-            tempUser777.getUserMsg().setConfi(true);
-            mSocket.send(tempUser777.toString());
-            //
+
+            Msg msg888 = new Msg(true,"ShEnQiNgLiEbIaO",false);
+            User tempUser888 = new User(mUser.getUserId(),mUser.getUserName(),R.drawable.boy,msg888);
+            tempUser888.getUserMsg().setConfi(true);
+            mSocket.send(tempUser888.toString());
+
             User user = new User();
             user.setUserMsg(new Msg(false,"连接成功",true));
             output(user);
@@ -198,6 +202,21 @@ public class ChatActivity extends Activity {
         public void onMessage(WebSocket webSocket, String text) {
             super.onMessage(webSocket, text);
             User user = JSON.parseObject(text, User.class);
+            if(user.getUserMsg().isConfi()==true)
+            {
+                if(user.getUserMsg().getContent() == "gEiNiShEnQiNgLiEbIaO")
+                {
+                    touxiangList.add(user);
+                    mAdapter2.notifyItemInserted(mUserArrayList.size() - 1);
+                }
+                if(user.getUserMsg().getContent() == "JieShuChuanSong")
+                {
+
+                }
+                return;
+            }
+
+
             output(user);
         }
 

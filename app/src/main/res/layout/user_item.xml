@@ -95,15 +95,16 @@
 
     <LinearLayout
         android:id="@+id/system_layout"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
         <TextView
             android:id="@+id/system_text"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:text="系统消息:"
             android:layout_gravity="center"
-            android:textColor="#F17070"/>
+            android:text="系统消息:"
+            android:textColor="#F17070" />
     </LinearLayout>
 </RelativeLayout>
