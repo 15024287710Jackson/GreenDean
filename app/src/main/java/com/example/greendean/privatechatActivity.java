@@ -449,11 +449,18 @@ public class privatechatActivity extends Activity {
             if(user.getUserMsg().isPrivate())
             {
 
-                user.setUserName(user.getUserName()+"     私聊");
-                if(SHUTDOWNFLAG == 0) {
-                    System.out.println("normal output");
-                    output(user);
+                if(user.getUserMsg().getTargetUserID().equals(mUser.getUserId()))
+                {
+                    user.setUserName(user.getUserName()+"     私聊");
+                    if(SHUTDOWNFLAG == 0) {
+                        System.out.println("normal output");
+                        output(user);
+                        return;
+                    }
+
                 }
+
+
             }
 
 
