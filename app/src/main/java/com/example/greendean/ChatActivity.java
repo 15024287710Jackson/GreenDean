@@ -247,6 +247,21 @@ public class ChatActivity extends Activity {
                     return;
                 }
             }
+            if(user.getUserMsg().isPrivate())
+            {
+
+                if(user.getUserMsg().getTargetUserID().equals(mUser.getUserId()))
+                {
+                    user.setUserName(user.getUserName()+"     私聊");
+                    System.out.println("normal output");
+                    output(user);
+                    return;
+
+                }
+                return;
+
+
+            }
             output(user);
         }
 
