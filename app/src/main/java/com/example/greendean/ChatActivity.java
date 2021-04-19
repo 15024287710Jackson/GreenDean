@@ -237,6 +237,7 @@ public class ChatActivity extends Activity {
         @Override
         public void onMessage(WebSocket webSocket, String text) {
             super.onMessage(webSocket, text);
+            System.out.println(text);
             User user = JSON.parseObject(text, User.class);
             if(user.getUserMsg().isConfi())
             {
@@ -245,6 +246,21 @@ public class ChatActivity extends Activity {
                     openprivatechat();
                     return;
                 }
+            }
+            if(user.getUserMsg().isPrivate())
+            {
+
+                if(user.getUserMsg().getTargetUserID().equals(mUser.getUserId()))
+                {
+                    user.setUserName(user.getUserName()+"     私聊");
+                    System.out.println("normal output");
+                    output(user);
+                    return;
+
+                }
+                return;
+
+
             }
             output(user);
         }

@@ -15,9 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -35,10 +39,14 @@ public class privatechatActivity extends Activity {
     private UserAdapter mAdapter;//适配器
     private ChooseAdapter mAdapter2;
     private TextView mOnlinenum;
+    private TextView mTargetId;
     private boolean backFlag = false;
     private WebSocket mSocket;
     private RecyclerView mSelectionView;
+    private String TargetUserId;
     private UserList mUserList;
+    private int SHUTDOWNFLAG = 0;
+    //private ArrayList<User> Userlistarray123;
 
 
 
@@ -54,7 +62,14 @@ public class privatechatActivity extends Activity {
 
 
         //申请userlist
-        mUserList = new UserList();
+        //mUserList = new UserList();
+        //ArrayList<User> Userlistarray123 = new ArrayList<User>();
+
+        System.out.println("初始化");
+        TargetUserId = "";
+
+        mOnlinenum = (TextView)findViewById(R.id.onlinenum);
+        mTargetId = (TextView)findViewById(R.id.targetid);
 
         //getUserList();
 
@@ -74,9 +89,18 @@ public class privatechatActivity extends Activity {
         mRecyclerView.setAdapter(mAdapter);
 
 
-        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this,RecyclerView.HORIZONTAL, false);
         mSelectionView.setLayoutManager(layoutManager2);
         mAdapter2 = new ChooseAdapter(touxiangList);
+        mAdapter2.setOnItemClickListener(new ChooseAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(RecyclerView parent, View view, int position, User user) {
+                System.out.println(user);
+                TargetUserId = user.getUserId();
+                mTargetId.setText("你正在与用户  "+user.getUserName()+"  私聊！");
+                mUserArrayList.clear();
+            }
+        });
         mSelectionView.setAdapter(mAdapter2);
 
 
@@ -89,7 +113,11 @@ public class privatechatActivity extends Activity {
                 String content = mInputText.getText().toString();
                 if (!"".equals(content)) {
                     Msg msg = new Msg(true,content,false);
+                    msg.setTargetUserID(TargetUserId);
+                    msg.setPrivate(true);
                     User tempUser = new User(mUser.getUserId(),mUser.getUserName(),R.drawable.boy,msg);
+                    tempUser.getUserMsg().setTargetUserID(TargetUserId);
+                    tempUser.getUserMsg().setPrivate(true);
                     mSocket.send(tempUser.toString());
                     mUserArrayList.add(tempUser);
                     updateRecyclerView();//刷新RecyclerView
@@ -113,6 +141,24 @@ public class privatechatActivity extends Activity {
         //将RecyclerView定位到最后一行
         mRecyclerView.scrollToPosition(mUserArrayList.size() - 1);
     }
+
+    private void updatetouxiangView(int i){
+        //当有新消息时，刷新RecyclerView中的显示
+        //mAdapter2.notifyItemInserted(i);
+        mAdapter2.notifyDataSetChanged();
+        //将RecyclerView定位到最后一行
+        //mRecyclerView.scrollToPosition(mUserArrayList.size() - 1);
+    }
+    private void updatetouxiangViewdel(int i){
+        //当有新消息时，刷新RecyclerView中的显示
+        mAdapter2.notifyDataSetChanged();
+
+        //将RecyclerView定位到最后一行
+        //mRecyclerView.scrollToPosition(mUserArrayList.size() - 1);
+    }
+
+
+    //更新表面
 
     /**
      * 开启web socket连接
@@ -142,6 +188,42 @@ public class privatechatActivity extends Activity {
             public void run() {
                 mUserArrayList.add(user);
                 updateRecyclerView();
+            }
+        });
+    }
+
+    private void outputforuser(final User user) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                touxiangList.add(user);
+                updatetouxiangView(touxiangList.indexOf(user));
+                mOnlinenum.setText("当前有"+String.valueOf(touxiangList.size())+"人在线！");
+            }
+        });
+    }
+
+    private void outputdeluser(final User user) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //int i = touxiangList.indexOf(user);
+                System.out.println(touxiangList.size());
+                for(int j = 0 ; j < touxiangList.size();j++)
+                {
+                    System.out.println("remove");
+
+                    if(touxiangList.get(j).getUserId().equals(user.getUserId()))
+                    {
+                        //System.out.println(j);
+                        System.out.println("remove one!");
+                        touxiangList.remove(j);
+                        mAdapter2.notifyDataSetChanged();
+                    }
+                }
+                mOnlinenum.setText("当前有"+String.valueOf(touxiangList.size())+"人在线！");
+
+                //updatetouxiangViewdel(1);
             }
         });
     }
@@ -193,13 +275,27 @@ public class privatechatActivity extends Activity {
             backFlag = true;
             return true;
         }else {
-
             sendclosemessage();
-
             Intent mintent = ChatActivity.newIntent(privatechatActivity.this,mUser.toString());
             startActivity(mintent);
             return super.onKeyDown(keyCode, event);
         }
+    }
+
+    /**
+     * 使用正则表达式提取中括号中的内容
+     * @param msg
+     * @return
+     */
+    public static ArrayList<String> extractMessageByRegular(String msg){
+
+        ArrayList<String> list=new ArrayList<String>();
+        Pattern p = Pattern.compile("(\\[[^\\]]*\\])");
+        Matcher m = p.matcher(msg);
+        while(m.find()){
+            list.add(m.group().substring(1, m.group().length()-1));
+        }
+        return list;
     }
 
 
@@ -229,32 +325,65 @@ public class privatechatActivity extends Activity {
         public void onMessage(WebSocket webSocket, String text) {
             super.onMessage(webSocket, text);
             System.out.println(text);
-            User user = JSON.parseObject(text, User.class);
-            //System.out.println(user);
-            mUserList = JSON.parseObject(text, UserList.class);
-            if(mUserList.isUserList())
+            if(text.contains("gEiNiShEnQiNgLiEbIaO"))
             {
-                return;
-            }
-           /* {
+
+                System.out.println("11111");//mUserList = JSON.parseObject(text, UserList.class);
+                ArrayList<User> Userlistarray123 = new ArrayList<User>();
+
+                ArrayList<String> Userlistarray123string;
+
+                Userlistarray123string = extractMessageByRegular(text);
+
+                for(int j = 0 ; j < 1;j++)
+                {
+                    //User tempuser = new User();
+                    //String tempstring = Userlistarray123string.get(j);
+                    //String tempimg = tempstring.substring(tempstring.indexOf("Img"),tempstring.indexOf("userMsg"));
+                    //String tempimgnew = tempimg.substring(5,tempimg.length()-2);
+                    //System.out.println(tempimgnew);
+                    //String tempname = tempstring.substring(tempstring.indexOf("userName"),tempstring.indexOf("userId"));
+                    //String tempnamenew = tempname.substring(11,tempname.length()-3);
+                    //System.out.println(tempnamenew);
+                    //tempuser.setUserImg(Integer.valueOf(tempimgnew));
+                    //tempuser.setUserName(tempnamenew);
+                    //Userlistarray123.add(tempuser);
+                    Userlistarray123.add(JSON.parseObject(Userlistarray123string.get(j), User.class));
+                }
+                System.out.println("114");
+
+                //String msg = "PerformanceManager[第1个中括号]Product[第2个中括号]<[第3个中括号]79~";
+                //List<String> list = extractMessageByRegular(msg);
+                //for (int i = 0; i < list.size(); i++) {
+                //    System.out.println(i+"-->"+list.get(i));
+                //}
+                //JSONArray jsonArray1= JSONArray.parseArray(text);
+                //System.out.println(jsonArray1);
+                //Userlistarray123 = JSONArray.parseArray(text,User.class);
+
+                //Userlistarray123 = jsonArray1.toJavaList(User.class);
+
+                //Userlistarray123.forEach(student -> System.out.println("stundet info: " + student));
+
                 System.out.println("是列表");
 
-                if(!mUserList.isEmpty())
+                if(!Userlistarray123.isEmpty())
                 {
                     System.out.println("非空，开始更新");
-                    ArrayList<User> templist = new ArrayList<User>();
-                    templist = mUserList.getuserlist();
-                    for(User user1:templist)
+                    for(User user1:Userlistarray123)
                     {
-                        touxiangList.add(user);
-                        mAdapter2.notifyItemInserted(mUserArrayList.size() - 1);
+                        //touxiangList.add(user1);
+                        //mAdapter2.notifyItemInserted(touxiangList.size() - 1);
+                        outputforuser(user1);
                     }
-
                 }
-
                 return;
-            }*/
 
+            }
+
+
+            User user = JSON.parseObject(text, User.class);
+            System.out.println(user);
 
             if(user.getUserMsg().isConfi())
             {
@@ -273,8 +402,7 @@ public class privatechatActivity extends Activity {
                 if(user.getUserMsg().getContent().equals("NEWUSERCOME"))
                 {
                     System.out.println("更新User列表！");
-                    touxiangList.add(user);
-                    mAdapter2.notifyItemInserted(mUserArrayList.size() - 1);
+                    outputforuser(user);
                 }
 
                 return;
@@ -282,8 +410,67 @@ public class privatechatActivity extends Activity {
 
             System.out.println(user.getUserMsg().isConfi());
 
+            if(user.getUserMsg().isSystem())
+            {
+                if(user.getUserMsg().getContent().equals("有用户断开聊天"))
+                {
+                    //Userlistarray123.remove(user);
+                    if(user.getUserId().equals(TargetUserId))
+                    {
+                        System.out.println(TargetUserId);
+                        System.out.println(user.getUserId());
+                        //Toast.makeText(getApplicationContext(),"您私聊的用户已经下线",Toast.LENGTH_LONG).show();
+                        //System.out.println("111111111111111111111111111111");
+                        Intent mintent = ChatActivity.newIntent(privatechatActivity.this,mUser.toString());
 
-            output(user);
+                        startActivity(mintent);
+                        SHUTDOWNFLAG =1;
+
+                        finish();
+
+
+
+
+                        return;
+
+
+                    }
+                    else {
+                        System.out.println("delete user");
+                        outputdeluser(user);
+
+                        return;
+                    }
+                }
+
+
+            }
+
+            if(user.getUserMsg().isPrivate())
+            {
+
+                if(user.getUserMsg().getTargetUserID().equals(mUser.getUserId()))
+                {
+                    user.setUserName(user.getUserName()+"     私聊");
+                    if(SHUTDOWNFLAG == 0) {
+                        System.out.println("normal output");
+                        output(user);
+                        return;
+                    }
+
+                }
+                else return;
+
+
+            }
+
+
+
+
+            if(SHUTDOWNFLAG == 0) {
+                System.out.println("normal output");
+                output(user);
+            }
         }
 
 
@@ -305,5 +492,7 @@ public class privatechatActivity extends Activity {
             output(user);
         }
     }
+
+
 
 }
