@@ -89,7 +89,7 @@ public class privatechatActivity extends Activity {
         mRecyclerView.setAdapter(mAdapter);
 
 
-        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this,RecyclerView.HORIZONTAL, false);
         mSelectionView.setLayoutManager(layoutManager2);
         mAdapter2 = new ChooseAdapter(touxiangList);
         mAdapter2.setOnItemClickListener(new ChooseAdapter.OnItemClickListener() {
