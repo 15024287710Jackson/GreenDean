@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -144,6 +145,17 @@ public class Addimage extends AppCompatActivity implements View.OnClickListener,
 //                        String response = UploadImage.uploadFile(file, requestURL);
                         try {
                             JSONObject jsonObject=post_file(requestURL,  params, file,"file",callback);
+                            Looper.prepare();
+                            if(jsonObject.getString("result").equals("Y")){
+                                Intent intent = new Intent(getApplicationContext(),Controllercentre.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("userId", userId);
+                                bundle.putString("userName", userName);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                                Addimage.this.finish();
+                            }
+                            Looper.loop();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -202,11 +214,17 @@ public class Addimage extends AppCompatActivity implements View.OnClickListener,
         }
         Request request = builder.url(url).post(requestBody.build()).build();
         Response response = client.newCall(request).execute();
-        System.out.println(response.body().string());
-        jsonObject= new JSONObject(response.body().string());;
+        String str=response.body().string();
+        System.out.println(str);
+        jsonObject= new JSONObject(str);;
         if(response.code()==200){
-            Toast.makeText(this, "Upload Successfully.",
-                    Toast.LENGTH_LONG).show();
+            Looper.prepare();
+            try {
+                Toast.makeText(this, "Upload Successfully.", Toast.LENGTH_LONG).show();
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+            Looper.loop();
         }
         return jsonObject;
         // readTimeout("请求超时时间" , 时间单位);

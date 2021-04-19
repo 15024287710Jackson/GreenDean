@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Surface;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -74,6 +76,17 @@ public class Addvideo extends AppCompatActivity {
                     public void run() {
                         try {
                             JSONObject jsonObject=post_file(url, params, file, "file");
+                            Looper.prepare();
+                            if(jsonObject.getString("result").equals("Y")){
+                                Intent intent = new Intent(getApplicationContext(),Controllercentre.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("userId", userId);
+                                bundle.putString("userName", userName);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                                Addvideo.this.finish();
+                            }
+                            Looper.loop();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -133,11 +146,17 @@ public class Addvideo extends AppCompatActivity {
         }
         Request request = builder.url(url).post(requestBody.build()).build();
         Response response = client.newCall(request).execute();
-        System.out.println(response.body().string());
-        jsonObject= new JSONObject(response.body().string());;
+        String str=response.body().string();
+        System.out.println(str);
+        jsonObject= new JSONObject(str);;
         if(response.code()==200){
-            Toast.makeText(this, "Upload Successfully.",
-                    Toast.LENGTH_LONG).show();
+            Looper.prepare();
+            try {
+                Toast.makeText(this, "Upload Successfully.", Toast.LENGTH_LONG).show();
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+            Looper.loop();
         }
         return jsonObject;
         // readTimeout("请求超时时间" , 时间单位);
