@@ -15,12 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -42,6 +43,7 @@ public class privatechatActivity extends Activity {
     private WebSocket mSocket;
     private RecyclerView mSelectionView;
     private UserList mUserList;
+    //private ArrayList<User> Userlistarray123;
 
 
 
@@ -58,6 +60,7 @@ public class privatechatActivity extends Activity {
 
         //申请userlist
         //mUserList = new UserList();
+        //ArrayList<User> Userlistarray123 = new ArrayList<User>();
 
         System.out.println("初始化");
 
@@ -119,6 +122,22 @@ public class privatechatActivity extends Activity {
         mRecyclerView.scrollToPosition(mUserArrayList.size() - 1);
     }
 
+    private void updatetouxiangView(int i){
+        //当有新消息时，刷新RecyclerView中的显示
+        mAdapter2.notifyItemInserted(i);
+        //将RecyclerView定位到最后一行
+        //mRecyclerView.scrollToPosition(mUserArrayList.size() - 1);
+    }
+    private void updatetouxiangViewdel(int i){
+        //当有新消息时，刷新RecyclerView中的显示
+        mAdapter2.notifyItemRemoved(i);
+        //将RecyclerView定位到最后一行
+        //mRecyclerView.scrollToPosition(mUserArrayList.size() - 1);
+    }
+
+
+    //更新表面
+
     /**
      * 开启web socket连接
      * */
@@ -147,6 +166,26 @@ public class privatechatActivity extends Activity {
             public void run() {
                 mUserArrayList.add(user);
                 updateRecyclerView();
+            }
+        });
+    }
+
+    private void outputforuser(final User user) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                touxiangList.add(user);
+                updatetouxiangView(touxiangList.size()-1);
+            }
+        });
+    }
+
+    private void outputdeluser(final User user) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                updatetouxiangViewdel(touxiangList.indexOf(user));
+                touxiangList.remove(user);
             }
         });
     }
@@ -198,13 +237,27 @@ public class privatechatActivity extends Activity {
             backFlag = true;
             return true;
         }else {
-
             sendclosemessage();
-
             Intent mintent = ChatActivity.newIntent(privatechatActivity.this,mUser.toString());
             startActivity(mintent);
             return super.onKeyDown(keyCode, event);
         }
+    }
+
+    /**
+     * 使用正则表达式提取中括号中的内容
+     * @param msg
+     * @return
+     */
+    public static ArrayList<String> extractMessageByRegular(String msg){
+
+        ArrayList<String> list=new ArrayList<String>();
+        Pattern p = Pattern.compile("(\\[[^\\]]*\\])");
+        Matcher m = p.matcher(msg);
+        while(m.find()){
+            list.add(m.group().substring(1, m.group().length()-1));
+        }
+        return list;
     }
 
 
@@ -236,11 +289,43 @@ public class privatechatActivity extends Activity {
             System.out.println(text);
             if(text.contains("gEiNiShEnQiNgLiEbIaO"))
             {
-                //mUserList = JSON.parseObject(text, UserList.class);
+
+                System.out.println("11111");//mUserList = JSON.parseObject(text, UserList.class);
                 ArrayList<User> Userlistarray123 = new ArrayList<User>();
-                //System.out.println(mUserList.isUserList());
-                Userlistarray123 = JSONArray.parseArray(text, User.class);
-                Userlistarray123.forEach(student -> System.out.println("stundet info: " + student));
+
+                ArrayList<String> Userlistarray123string;
+
+                Userlistarray123string = extractMessageByRegular(text);
+
+                for(int j = 0 ; j < 1;j++)
+                {
+                    //User tempuser = new User();
+                    //String tempstring = Userlistarray123string.get(j);
+                    //String tempimg = tempstring.substring(tempstring.indexOf("Img"),tempstring.indexOf("userMsg"));
+                    //String tempimgnew = tempimg.substring(5,tempimg.length()-2);
+                    //System.out.println(tempimgnew);
+                    //String tempname = tempstring.substring(tempstring.indexOf("userName"),tempstring.indexOf("userId"));
+                    //String tempnamenew = tempname.substring(11,tempname.length()-3);
+                    //System.out.println(tempnamenew);
+                    //tempuser.setUserImg(Integer.valueOf(tempimgnew));
+                    //tempuser.setUserName(tempnamenew);
+                    //Userlistarray123.add(tempuser);
+                    Userlistarray123.add(JSON.parseObject(Userlistarray123string.get(j), User.class));
+                }
+                System.out.println("114");
+
+                //String msg = "PerformanceManager[第1个中括号]Product[第2个中括号]<[第3个中括号]79~";
+                //List<String> list = extractMessageByRegular(msg);
+                //for (int i = 0; i < list.size(); i++) {
+                //    System.out.println(i+"-->"+list.get(i));
+                //}
+                //JSONArray jsonArray1= JSONArray.parseArray(text);
+                //System.out.println(jsonArray1);
+                //Userlistarray123 = JSONArray.parseArray(text,User.class);
+
+                //Userlistarray123 = jsonArray1.toJavaList(User.class);
+
+                //Userlistarray123.forEach(student -> System.out.println("stundet info: " + student));
 
                 System.out.println("是列表");
 
@@ -249,8 +334,9 @@ public class privatechatActivity extends Activity {
                     System.out.println("非空，开始更新");
                     for(User user1:Userlistarray123)
                     {
-                        touxiangList.add(user1);
-                        mAdapter2.notifyItemInserted(touxiangList.size() - 1);
+                        //touxiangList.add(user1);
+                        //mAdapter2.notifyItemInserted(touxiangList.size() - 1);
+                        outputforuser(user1);
                     }
                 }
                 return;
@@ -278,14 +364,22 @@ public class privatechatActivity extends Activity {
                 if(user.getUserMsg().getContent().equals("NEWUSERCOME"))
                 {
                     System.out.println("更新User列表！");
-                    touxiangList.add(user);
-                    mAdapter2.notifyItemInserted(mUserArrayList.size() - 1);
+                    outputforuser(user);
                 }
 
                 return;
             }
 
             System.out.println(user.getUserMsg().isConfi());
+
+            if(user.getUserMsg().isSystem())
+            {
+                if(user.getUserMsg().getContent().equals("有用户断开聊天"))
+                {
+                    //Userlistarray123.remove(user);
+                    outputdeluser(user);
+                }
+            }
 
 
             output(user);
@@ -310,5 +404,7 @@ public class privatechatActivity extends Activity {
             output(user);
         }
     }
+
+
 
 }
