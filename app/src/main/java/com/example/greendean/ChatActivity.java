@@ -237,6 +237,7 @@ public class ChatActivity extends Activity {
         @Override
         public void onMessage(WebSocket webSocket, String text) {
             super.onMessage(webSocket, text);
+            System.out.println(text);
             User user = JSON.parseObject(text, User.class);
             if(user.getUserMsg().isConfi())
             {

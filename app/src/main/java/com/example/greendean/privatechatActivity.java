@@ -16,6 +16,9 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -54,7 +57,9 @@ public class privatechatActivity extends Activity {
 
 
         //申请userlist
-        mUserList = new UserList();
+        //mUserList = new UserList();
+
+        System.out.println("初始化");
 
         //getUserList();
 
@@ -229,32 +234,32 @@ public class privatechatActivity extends Activity {
         public void onMessage(WebSocket webSocket, String text) {
             super.onMessage(webSocket, text);
             System.out.println(text);
-            User user = JSON.parseObject(text, User.class);
-            //System.out.println(user);
-            mUserList = JSON.parseObject(text, UserList.class);
-            if(mUserList.isUserList())
+            if(text.contains("gEiNiShEnQiNgLiEbIaO"))
             {
-                return;
-            }
-           /* {
+                //mUserList = JSON.parseObject(text, UserList.class);
+                ArrayList<User> Userlistarray123 = new ArrayList<User>();
+                //System.out.println(mUserList.isUserList());
+                Userlistarray123 = JSONArray.parseArray(text, User.class);
+                Userlistarray123.forEach(student -> System.out.println("stundet info: " + student));
+
                 System.out.println("是列表");
 
-                if(!mUserList.isEmpty())
+                if(!Userlistarray123.isEmpty())
                 {
                     System.out.println("非空，开始更新");
-                    ArrayList<User> templist = new ArrayList<User>();
-                    templist = mUserList.getuserlist();
-                    for(User user1:templist)
+                    for(User user1:Userlistarray123)
                     {
-                        touxiangList.add(user);
-                        mAdapter2.notifyItemInserted(mUserArrayList.size() - 1);
+                        touxiangList.add(user1);
+                        mAdapter2.notifyItemInserted(touxiangList.size() - 1);
                     }
-
                 }
-
                 return;
-            }*/
 
+            }
+
+
+            User user = JSON.parseObject(text, User.class);
+            System.out.println(user);
 
             if(user.getUserMsg().isConfi())
             {
