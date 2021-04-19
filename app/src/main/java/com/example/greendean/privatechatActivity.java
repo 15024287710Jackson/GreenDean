@@ -112,12 +112,17 @@ public class privatechatActivity extends Activity {
                     //如果没有保存，没有拥有setter
                 {
                     localhistory.put(TargetUserId,setter1);//保存此用户的setter
+                    //System.out.println(mUserArrayList);
                     storedhistory.add(setter1,mUserArrayList);//在setter对应位置上保存聊天记录
+                    //System.out.println(storedhistory.get(setter1));
+                    setter1++;
+                    System.out.println("1");
                 }
                 else if(localhistory.get(TargetUserId)!=null)//如果已经保存过 拥有setter
                 {
                     int setter2 = localhistory.get(TargetUserId);//取出对应的setter
                     storedhistory.set(setter2,mUserArrayList);//在setter对应位置上保存聊天记录
+                    System.out.println("2");
                 }
                 //保存结束
                 //开始加载
@@ -127,9 +132,16 @@ public class privatechatActivity extends Activity {
                 if(localhistory.get(TargetUserId)!=null)//如果targetId已经保存过 拥有setter
                 {
                     int setter2 = localhistory.get(TargetUserId);//取出对应的setter
+                    System.out.println(storedhistory.get(setter2));
                     mUserArrayList = storedhistory.get(setter2);//取出聊天记录
+                    //System.out.println(setter2);
+                    //System.out.println(storedhistory.get(setter2));
+                    //System.out.println("3");
+
 
                 }
+                System.out.println("4");
+                System.out.println(setter1);
                 updateRecyclerView();
 
 
