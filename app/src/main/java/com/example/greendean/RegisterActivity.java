@@ -1,6 +1,7 @@
 package com.example.greendean;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -51,6 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Looper.prepare();
                             try {
                                 if(jsonObject.getString("result").equals("Y")){
+                                    savePreferences(edit_name, edit_pwd);
                                     Toast.makeText(RegisterActivity.this,jsonObject.getString("msg"), Toast.LENGTH_LONG).show();
                                 }else{
                                     Toast.makeText(RegisterActivity.this,jsonObject.getString("msg"), Toast.LENGTH_LONG).show();
@@ -118,6 +120,12 @@ public class RegisterActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return jsonObject;
+    }
+
+    public void savePreferences(String account, String password) {
+        SharedPreferences pref = getSharedPreferences("GreenDeanAccountInfo", MODE_PRIVATE);
+        pref.edit().putString("account", account).apply();
+        pref.edit().putString("password", password).apply();
     }
 
 }
