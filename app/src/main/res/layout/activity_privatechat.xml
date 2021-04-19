@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#d8e0e8">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:text="当前没有人在线！"
+        android:layout_gravity="center"
+        android:id="@+id/onlinenum"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/msg_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/privateselection"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="horizontal" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/msg_recycler_view_private"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
@@ -16,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
-            android:id="@+id/input_text"
+            android:id="@+id/input_text_private"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -25,15 +39,10 @@
             android:hint="请输入……"
             />
         <Button
-            android:id="@+id/send"
+            android:id="@+id/send_private"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:text="发送"/>
-        <Button
-            android:layout_marginStart="10dp"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/privatechat"
-            android:text="私聊"/>
+
     </LinearLayout>
 </LinearLayout>
