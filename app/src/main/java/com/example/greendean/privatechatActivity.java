@@ -459,6 +459,7 @@ public class privatechatActivity extends Activity {
                     }
 
                 }
+                else return;
 
 
             }
