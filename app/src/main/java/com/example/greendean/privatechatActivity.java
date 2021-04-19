@@ -113,9 +113,11 @@ public class privatechatActivity extends Activity {
                 String content = mInputText.getText().toString();
                 if (!"".equals(content)) {
                     Msg msg = new Msg(true,content,false);
+                    msg.setTargetUserID(TargetUserId);
                     msg.setPrivate(true);
                     User tempUser = new User(mUser.getUserId(),mUser.getUserName(),R.drawable.boy,msg);
                     tempUser.getUserMsg().setTargetUserID(TargetUserId);
+                    tempUser.getUserMsg().setPrivate(true);
                     mSocket.send(tempUser.toString());
                     mUserArrayList.add(tempUser);
                     updateRecyclerView();//刷新RecyclerView
@@ -442,6 +444,16 @@ public class privatechatActivity extends Activity {
                 }
 
 
+            }
+
+            if(user.getUserMsg().isPrivate())
+            {
+
+                user.setUserName(user.getUserName()+"     私聊");
+                if(SHUTDOWNFLAG == 0) {
+                    System.out.println("normal output");
+                    output(user);
+                }
             }
 
 
