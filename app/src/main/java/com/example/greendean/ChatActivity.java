@@ -87,15 +87,48 @@ public class ChatActivity extends Activity {
         privatesend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //mSocket.close();
+                sendclosemessage(1);//打开私聊
+                //此函数向服务端发送关闭申请，服务端收到后返回允许关闭
+                //收到允许关闭后关闭并打开私聊
 
-                Intent mintent = privatechatActivity.newIntent(ChatActivity.this,mUser.toString());
-                startActivity(mintent);
             }
         });
+    }
+
+    private void openprivatechat()
+    {
+        Intent mintent = privatechatActivity.newIntent(ChatActivity.this,mUser.toString());
+        startActivity(mintent);
+        finish();
+    }
 
 
+    private void sendclosemessage(int i)
+    {
+        if(i==1)//打开私聊
+        {
+            Msg msg123456 = new Msg(true,"CloseTheSessionPLZandOPENprivate",false);
+            msg123456.setConfi(true);
+            User tempUser123456 = new User(mUser.getUserId(),mUser.getUserName(),R.drawable.boy,msg123456);
+            tempUser123456.getUserMsg().setConfi(true);
+            mSocket.send(tempUser123456.toString());
+        }
+        if(i==2)
+        {
+            Msg msg123456 = new Msg(true,"CloseTheSessionPLZ",false);
+            msg123456.setConfi(true);
+            User tempUser123456 = new User(mUser.getUserId(),mUser.getUserName(),R.drawable.boy,msg123456);
+            tempUser123456.getUserMsg().setConfi(true);
+            mSocket.send(tempUser123456.toString());
+        }
+    }
 
 
+    @Override
+    protected void onDestroy() {
+        //this.sendclosemessage(2);
+        super.onDestroy();
     }
 
     /**
@@ -170,6 +203,13 @@ public class ChatActivity extends Activity {
             backFlag = true;
             return true;
         }else {
+            Intent mintent = LoginActivity.newIntent(ChatActivity.this,mUser.toString());
+            startActivity(mintent);
+            //mSocket.close();
+            sendclosemessage(2);
+            //此函数单纯为了确保sockets已经关闭
+            //服务端不会发回任何消息
+            finish();
             return super.onKeyDown(keyCode, event);
         }
     }
@@ -198,6 +238,14 @@ public class ChatActivity extends Activity {
         public void onMessage(WebSocket webSocket, String text) {
             super.onMessage(webSocket, text);
             User user = JSON.parseObject(text, User.class);
+            if(user.getUserMsg().isConfi())
+            {
+                if(user.getUserMsg().getContent().equals("okyoucanclose"))
+                {
+                    openprivatechat();
+                    return;
+                }
+            }
             output(user);
         }
 

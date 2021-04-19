@@ -2,6 +2,7 @@ package com.example.greendean;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -34,6 +35,12 @@ public class LoginActivity extends AppCompatActivity {
     String user_id;
     String account = "";
     String password = "";
+
+    public static Intent newIntent(Context context, String data){
+        Intent intent = new Intent(context,LoginActivity.class);
+        intent.putExtra("data",data);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -11,7 +11,7 @@ public class UserList {
     public UserList() {
         System.out.println("创建USERLIST！");
         this.userlist = new ArrayList<User>();
-        this.isUserList = true;
+        this.isUserList = false;
         this.isEmpty = true;
     }
 
@@ -26,8 +26,17 @@ public class UserList {
         this.isEmpty = i;
     }
 
+    public void setIsUserList(boolean j)
+    {
+        this.isUserList = j;
+    }
+
     public boolean isUserList() {
-        return isUserList;
+        if(isUserList)
+        {
+            return true;
+        }
+        else return false;
     }
     public void addUser(User user)
     {

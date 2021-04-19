@@ -102,6 +102,8 @@ public class privatechatActivity extends Activity {
 
     }
 
+
+
     /**
      * 刷新view
      * */
@@ -155,10 +157,27 @@ public class privatechatActivity extends Activity {
         mOnlinenum = findViewById(R.id.onlinenum);
     }
 
+    private void sendclosemessage()
+    {
+        Msg msg123456 = new Msg(true,"CloseTheSessionPLZ",false);
+        msg123456.setConfi(true);
+        User tempUser123456 = new User(mUser.getUserId(),mUser.getUserName(),R.drawable.boy,msg123456);
+        tempUser123456.getUserMsg().setConfi(true);
+        mSocket.send(tempUser123456.toString());
+    }
+
+    @Override
+    protected void onDestroy() {
+        //this.sendclosemessage();
+        super.onDestroy();
+    }
+
     /**
      * 静态方法返回一个能启动自己的intent
      * */
     public static Intent newIntent(Context context, String data){
+
+
         Intent intent = new Intent(context,privatechatActivity.class);
         intent.putExtra("data",data);
         return intent;
@@ -174,6 +193,11 @@ public class privatechatActivity extends Activity {
             backFlag = true;
             return true;
         }else {
+
+            sendclosemessage();
+
+            Intent mintent = ChatActivity.newIntent(privatechatActivity.this,mUser.toString());
+            startActivity(mintent);
             return super.onKeyDown(keyCode, event);
         }
     }
@@ -204,11 +228,15 @@ public class privatechatActivity extends Activity {
         @Override
         public void onMessage(WebSocket webSocket, String text) {
             super.onMessage(webSocket, text);
+            System.out.println(text);
             User user = JSON.parseObject(text, User.class);
-            System.out.println("axiba1");
+            //System.out.println(user);
             mUserList = JSON.parseObject(text, UserList.class);
             if(mUserList.isUserList())
             {
+                return;
+            }
+           /* {
                 System.out.println("是列表");
 
                 if(!mUserList.isEmpty())
@@ -225,7 +253,7 @@ public class privatechatActivity extends Activity {
                 }
 
                 return;
-            }
+            }*/
 
 
             if(user.getUserMsg().isConfi())
@@ -244,12 +272,15 @@ public class privatechatActivity extends Activity {
 
                 if(user.getUserMsg().getContent().equals("NEWUSERCOME"))
                 {
+                    System.out.println("更新User列表！");
                     touxiangList.add(user);
                     mAdapter2.notifyItemInserted(mUserArrayList.size() - 1);
                 }
 
                 return;
             }
+
+            System.out.println(user.getUserMsg().isConfi());
 
 
             output(user);
