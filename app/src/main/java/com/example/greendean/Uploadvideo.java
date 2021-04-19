@@ -2,8 +2,6 @@ package com.example.greendean;
 
 
 
-
-
 import android.graphics.Bitmap;
 import android.widget.Toast;
 
