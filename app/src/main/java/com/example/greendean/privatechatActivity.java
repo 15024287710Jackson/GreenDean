@@ -38,10 +38,12 @@ public class privatechatActivity extends Activity {
     private boolean backFlag = false;
     private WebSocket mSocket;
     private RecyclerView mSelectionView;
+    private UserList mUserList;
 
 
 
     private User mUser;;//全局User
+    private User testuser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,9 @@ public class privatechatActivity extends Activity {
         initView();
 
 
+
         //申请userlist
+        mUserList = new UserList();
 
         //getUserList();
 
@@ -78,8 +82,6 @@ public class privatechatActivity extends Activity {
 
         //开启连接
         start(mUser.getUserId());
-
-
 
         mSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,6 +191,7 @@ public class privatechatActivity extends Activity {
             mSocket = webSocket;    //实例化web socket
 
             Msg msg888 = new Msg(true,"ShEnQiNgLiEbIaO",false);
+            msg888.setConfi(true);
             User tempUser888 = new User(mUser.getUserId(),mUser.getUserName(),R.drawable.boy,msg888);
             tempUser888.getUserMsg().setConfi(true);
             mSocket.send(tempUser888.toString());
@@ -202,23 +205,58 @@ public class privatechatActivity extends Activity {
         public void onMessage(WebSocket webSocket, String text) {
             super.onMessage(webSocket, text);
             User user = JSON.parseObject(text, User.class);
-            if(user.getUserMsg().isConfi()==true)
+            System.out.println("axiba1");
+            mUserList = JSON.parseObject(text, UserList.class);
+            if(mUserList.isUserList())
             {
-                if(user.getUserMsg().getContent() == "gEiNiShEnQiNgLiEbIaO")
+                System.out.println("是列表");
+
+                if(!mUserList.isEmpty())
+                {
+                    System.out.println("非空，开始更新");
+                    ArrayList<User> templist = new ArrayList<User>();
+                    templist = mUserList.getuserlist();
+                    for(User user1:templist)
+                    {
+                        touxiangList.add(user);
+                        mAdapter2.notifyItemInserted(mUserArrayList.size() - 1);
+                    }
+
+                }
+
+                return;
+            }
+
+
+            if(user.getUserMsg().isConfi())
+            {
+
+                System.out.println("axiba2");
+
+
+                //if(user.getUserMsg().getContent().equals("gEiNiShEnQiNgLiEbIaO"))
+                //{
+                //    System.out.println("axiba3");
+                //    touxiangList.add(user);
+                //    mAdapter2.notifyItemInserted(mUserArrayList.size() - 1);
+                //}
+
+
+                if(user.getUserMsg().getContent().equals("NEWUSERCOME"))
                 {
                     touxiangList.add(user);
                     mAdapter2.notifyItemInserted(mUserArrayList.size() - 1);
                 }
-                if(user.getUserMsg().getContent() == "JieShuChuanSong")
-                {
 
-                }
                 return;
             }
 
 
             output(user);
         }
+
+
+
 
         @Override
         public void onClosed(WebSocket webSocket, int code, String reason) {
