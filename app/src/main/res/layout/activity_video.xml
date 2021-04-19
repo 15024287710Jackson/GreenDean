@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="4dp"
+    android:orientation="vertical" >
+
+    <VideoView
+        android:id="@+id/videoView_video"
+        android:layout_width="381dp"
+        android:layout_height="365dp"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:id="@+id/textView99"
+        android:layout_width="381dp"
+        android:layout_height="132dp"
+        android:layout_gravity="center_horizontal" />
+    <Button
+        android:id="@+id/button_video"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="next video" />
+    <Button
+        android:id="@+id/button_picfun"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Turn to image function" />
+
+    <Button
+        android:id="@+id/button_addfunc"
+        android:layout_width="412dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Add the Video Information" />
+
+</LinearLayout>

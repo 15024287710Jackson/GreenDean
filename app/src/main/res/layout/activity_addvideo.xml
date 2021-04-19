@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:padding="8dp"
+    android:orientation="vertical" >
+
+    <VideoView
+        android:id="@+id/videoView_addvideo"
+        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="331dp" />
+    <Button
+        android:id="@+id/take_video_button"
+        android:layout_width="411dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="take a video" />
+
+    <EditText
+        android:id="@+id/et_account"
+        android:layout_width="match_parent"
+        android:layout_height="162dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@null"
+        android:hint="Please input the message"
+        android:textColor="#000000"
+        android:textColorHint="#bcbcbc"
+        android:textSize="24sp" />
+    <Button
+        android:id="@+id/upload_button"
+        android:layout_width="411dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="upload" />
+
+</LinearLayout>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Controllercentre">
+
+    <Button
+        android:id="@+id/button_toPic"
+        android:layout_width="260dp"
+        android:layout_height="74dp"
+        android:layout_marginStart="75dp"
+        android:layout_marginTop="88dp"
+        android:layout_marginEnd="76dp"
+        android:gravity="center"
+        android:text="To Picture"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_toVideo"
+        android:layout_width="260dp"
+        android:layout_height="74dp"
+        android:layout_marginStart="81dp"
+        android:layout_marginTop="72dp"
+        android:layout_marginEnd="82dp"
+        android:text="To Video"
+        android:gravity="center"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_toPic" />
+
+    <Button
+        android:id="@+id/button_toChat"
+        android:layout_width="260dp"
+        android:layout_height="74dp"
+        android:layout_marginStart="83dp"
+        android:layout_marginTop="79dp"
+        android:layout_marginEnd="89dp"
+        android:gravity="center"
+        android:text="Chat Room"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_toVideo" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

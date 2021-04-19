@@ -1,15 +1,21 @@
 package com.example.greendean;
 
+import android.graphics.BitmapFactory;
+import android.util.Log;
+
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
 
 public class HttpPostMethod {
-    private JSONObject loginSql(String path,JSONObject json)  {
+    public JSONObject httpPost(String path,JSONObject json)  {
         JSONObject jsonObject = null;
         int code;
         try{

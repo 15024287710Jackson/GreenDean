@@ -76,8 +76,15 @@ public class LoginActivity extends AppCompatActivity {
                                     String userName = name;
                                     String userId = user_id;
                                     savePreferences(name, pwd);
-                                    User user = new User(userId, userName);
-                                    Intent intent = ChatActivity.newIntent(LoginActivity.this, user.toString());
+                                    Intent intent = new Intent(getApplicationContext(),Controllercentre.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("userId", userId);
+                                    bundle.putString("userName", userName);
+//                                    bundle.putString("weight", weight);
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
+//                                    User user = new User(userId, userName);
+//                                    Intent intent = ChatActivity.newIntent(LoginActivity.this, user.toString());
                                     startActivity(intent);
                                     LoginActivity.this.finish();
                                 } else {
