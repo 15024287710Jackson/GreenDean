@@ -11,6 +11,12 @@
         android:text="当前没有人在线！"
         android:layout_gravity="center"
         android:id="@+id/onlinenum"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:text="你没有在私聊！"
+        android:layout_gravity="center"
+        android:id="@+id/targetid"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"

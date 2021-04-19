@@ -39,10 +39,13 @@ public class privatechatActivity extends Activity {
     private UserAdapter mAdapter;//适配器
     private ChooseAdapter mAdapter2;
     private TextView mOnlinenum;
+    private TextView mTargetId;
     private boolean backFlag = false;
     private WebSocket mSocket;
     private RecyclerView mSelectionView;
+    private String TargetUserId;
     private UserList mUserList;
+    private int SHUTDOWNFLAG = 0;
     //private ArrayList<User> Userlistarray123;
 
 
@@ -63,6 +66,10 @@ public class privatechatActivity extends Activity {
         //ArrayList<User> Userlistarray123 = new ArrayList<User>();
 
         System.out.println("初始化");
+        TargetUserId = "";
+
+        mOnlinenum = (TextView)findViewById(R.id.onlinenum);
+        mTargetId = (TextView)findViewById(R.id.targetid);
 
         //getUserList();
 
@@ -85,6 +92,15 @@ public class privatechatActivity extends Activity {
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);
         mSelectionView.setLayoutManager(layoutManager2);
         mAdapter2 = new ChooseAdapter(touxiangList);
+        mAdapter2.setOnItemClickListener(new ChooseAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(RecyclerView parent, View view, int position, User user) {
+                System.out.println(user);
+                TargetUserId = user.getUserId();
+                mTargetId.setText("你正在与用户  "+user.getUserName()+"  私聊！");
+                mUserArrayList.clear();
+            }
+        });
         mSelectionView.setAdapter(mAdapter2);
 
 
@@ -97,7 +113,9 @@ public class privatechatActivity extends Activity {
                 String content = mInputText.getText().toString();
                 if (!"".equals(content)) {
                     Msg msg = new Msg(true,content,false);
+                    msg.setPrivate(true);
                     User tempUser = new User(mUser.getUserId(),mUser.getUserName(),R.drawable.boy,msg);
+                    tempUser.getUserMsg().setTargetUserID(TargetUserId);
                     mSocket.send(tempUser.toString());
                     mUserArrayList.add(tempUser);
                     updateRecyclerView();//刷新RecyclerView
@@ -124,13 +142,15 @@ public class privatechatActivity extends Activity {
 
     private void updatetouxiangView(int i){
         //当有新消息时，刷新RecyclerView中的显示
-        mAdapter2.notifyItemInserted(i);
+        //mAdapter2.notifyItemInserted(i);
+        mAdapter2.notifyDataSetChanged();
         //将RecyclerView定位到最后一行
         //mRecyclerView.scrollToPosition(mUserArrayList.size() - 1);
     }
     private void updatetouxiangViewdel(int i){
         //当有新消息时，刷新RecyclerView中的显示
-        mAdapter2.notifyItemRemoved(i);
+        mAdapter2.notifyDataSetChanged();
+
         //将RecyclerView定位到最后一行
         //mRecyclerView.scrollToPosition(mUserArrayList.size() - 1);
     }
@@ -175,7 +195,8 @@ public class privatechatActivity extends Activity {
             @Override
             public void run() {
                 touxiangList.add(user);
-                updatetouxiangView(touxiangList.size()-1);
+                updatetouxiangView(touxiangList.indexOf(user));
+                mOnlinenum.setText("当前有"+String.valueOf(touxiangList.size())+"人在线！");
             }
         });
     }
@@ -184,8 +205,23 @@ public class privatechatActivity extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                updatetouxiangViewdel(touxiangList.indexOf(user));
-                touxiangList.remove(user);
+                //int i = touxiangList.indexOf(user);
+                System.out.println(touxiangList.size());
+                for(int j = 0 ; j < touxiangList.size();j++)
+                {
+                    System.out.println("remove");
+
+                    if(touxiangList.get(j).getUserId().equals(user.getUserId()))
+                    {
+                        //System.out.println(j);
+                        System.out.println("remove one!");
+                        touxiangList.remove(j);
+                        mAdapter2.notifyDataSetChanged();
+                    }
+                }
+                mOnlinenum.setText("当前有"+String.valueOf(touxiangList.size())+"人在线！");
+
+                //updatetouxiangViewdel(1);
             }
         });
     }
@@ -377,12 +413,44 @@ public class privatechatActivity extends Activity {
                 if(user.getUserMsg().getContent().equals("有用户断开聊天"))
                 {
                     //Userlistarray123.remove(user);
-                    outputdeluser(user);
+                    if(user.getUserId().equals(TargetUserId))
+                    {
+                        System.out.println(TargetUserId);
+                        System.out.println(user.getUserId());
+                        //Toast.makeText(getApplicationContext(),"您私聊的用户已经下线",Toast.LENGTH_LONG).show();
+                        //System.out.println("111111111111111111111111111111");
+                        Intent mintent = ChatActivity.newIntent(privatechatActivity.this,mUser.toString());
+
+                        startActivity(mintent);
+                        SHUTDOWNFLAG =1;
+
+                        finish();
+
+
+
+
+                        return;
+
+
+                    }
+                    else {
+                        System.out.println("delete user");
+                        outputdeluser(user);
+
+                        return;
+                    }
                 }
+
+
             }
 
 
-            output(user);
+
+
+            if(SHUTDOWNFLAG == 0) {
+                System.out.println("normal output");
+                output(user);
+            }
         }
 
 
