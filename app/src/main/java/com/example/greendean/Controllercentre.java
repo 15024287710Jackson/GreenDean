@@ -2,6 +2,7 @@ package com.example.greendean;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -49,6 +50,13 @@ public class Controllercentre extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+
+    public static Intent newIntent(Context context, String data){
+        Intent intent = new Intent(context,Controllercentre.class);
+        intent.putExtra("data",data);
+        return intent;
     }
 
 }

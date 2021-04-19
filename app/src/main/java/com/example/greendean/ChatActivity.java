@@ -203,12 +203,15 @@ public class ChatActivity extends Activity {
             backFlag = true;
             return true;
         }else {
-            Intent mintent = LoginActivity.newIntent(ChatActivity.this,mUser.toString());
+            Intent mintent = Controllercentre.newIntent(ChatActivity.this,mUser.toString());
             startActivity(mintent);
             //mSocket.close();
             sendclosemessage(2);
+
             //此函数单纯为了确保sockets已经关闭
             //服务端不会发回任何消息
+
+
             finish();
             return super.onKeyDown(keyCode, event);
         }
