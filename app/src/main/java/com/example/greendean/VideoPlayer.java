@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Window;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -53,7 +54,8 @@ import androidx.core.app.ActivityCompat;
 
 
 
-public class VideoPlayer extends AppCompatActivity {
+public class VideoPlayer extends Activity {
+
 
     private static final int TAKE_PHOTO_ID = 0;
     private Button button1,button2,button3;
