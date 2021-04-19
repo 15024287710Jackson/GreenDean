@@ -17,8 +17,13 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,6 +36,8 @@ import okhttp3.WebSocketListener;
 
 public class privatechatActivity extends Activity {
     private ArrayList<User> mUserArrayList = new ArrayList<>();//定义一个存储信息的列表
+    private Map<String, Integer> localhistory;
+    private ArrayList<ArrayList<User>> storedhistory;
     private ArrayList<User> touxiangList = new ArrayList<>();
     private EditText mInputText;//输入框
     private Button mSend;//发送按钮
@@ -45,6 +52,7 @@ public class privatechatActivity extends Activity {
     private RecyclerView mSelectionView;
     private String TargetUserId;
     private UserList mUserList;
+    private int setter1;
     private int SHUTDOWNFLAG = 0;
     //private ArrayList<User> Userlistarray123;
 
@@ -64,9 +72,12 @@ public class privatechatActivity extends Activity {
         //申请userlist
         //mUserList = new UserList();
         //ArrayList<User> Userlistarray123 = new ArrayList<User>();
+        localhistory = new ConcurrentHashMap<>();
+        storedhistory = new ArrayList<ArrayList<User>>();
 
         System.out.println("初始化");
         TargetUserId = "";
+        setter1=0;
 
         mOnlinenum = (TextView)findViewById(R.id.onlinenum);
         mTargetId = (TextView)findViewById(R.id.targetid);
@@ -96,9 +107,32 @@ public class privatechatActivity extends Activity {
             @Override
             public void onItemClick(RecyclerView parent, View view, int position, User user) {
                 System.out.println(user);
+                System.out.println(mUserArrayList);
+                if(localhistory.get(TargetUserId)==null)//检查当前用户是否已保存
+                    //如果没有保存，没有拥有setter
+                {
+                    localhistory.put(TargetUserId,setter1);//保存此用户的setter
+                    storedhistory.add(setter1,mUserArrayList);//在setter对应位置上保存聊天记录
+                }
+                else if(localhistory.get(TargetUserId)!=null)//如果已经保存过 拥有setter
+                {
+                    int setter2 = localhistory.get(TargetUserId);//取出对应的setter
+                    storedhistory.set(setter2,mUserArrayList);//在setter对应位置上保存聊天记录
+                }
+                //保存结束
+                //开始加载
                 TargetUserId = user.getUserId();
                 mTargetId.setText("你正在与用户  "+user.getUserName()+"  私聊！");
                 mUserArrayList.clear();
+                if(localhistory.get(TargetUserId)!=null)//如果targetId已经保存过 拥有setter
+                {
+                    int setter2 = localhistory.get(TargetUserId);//取出对应的setter
+                    mUserArrayList = storedhistory.get(setter2);//取出聊天记录
+
+                }
+                updateRecyclerView();
+
+
             }
         });
         mSelectionView.setAdapter(mAdapter2);
@@ -137,7 +171,8 @@ public class privatechatActivity extends Activity {
      * */
     private void updateRecyclerView(){
         //当有新消息时，刷新RecyclerView中的显示
-        mAdapter.notifyItemInserted(mUserArrayList.size() - 1);
+        //mAdapter.notifyItemInserted(mUserArrayList.size() - 1);
+        mAdapter.notifyDataSetChanged();
         //将RecyclerView定位到最后一行
         mRecyclerView.scrollToPosition(mUserArrayList.size() - 1);
     }
@@ -298,6 +333,33 @@ public class privatechatActivity extends Activity {
         return list;
     }
 
+    /**
+     * 提取{}括号中内容，忽略括号中的括号
+     * @param msg
+     * @return
+     */
+    public static ArrayList<String> extractMessage(String msg) {
+
+        ArrayList<String> list = new ArrayList<String>();
+        int start = 0;
+        int startFlag = 0;
+        int endFlag = 0;
+        for (int i = 0; i < msg.length(); i++) {
+            if (msg.charAt(i) == '{') {
+                startFlag++;
+                if (startFlag == endFlag + 1) {
+                    start = i;
+                }
+            } else if (msg.charAt(i) == '}') {
+                endFlag++;
+                if (endFlag == startFlag) {
+                    list.add(msg.substring(start , i+1));
+                }
+            }
+        }
+        return list;
+    }
+
 
 
     /**
@@ -332,11 +394,17 @@ public class privatechatActivity extends Activity {
                 ArrayList<User> Userlistarray123 = new ArrayList<User>();
 
                 ArrayList<String> Userlistarray123string;
+                ArrayList<String> Userlistarray345string;
 
                 Userlistarray123string = extractMessageByRegular(text);
+                Userlistarray345string = extractMessage(Userlistarray123string.get(0));
 
-                for(int j = 0 ; j < 1;j++)
+
+                System.out.println(Userlistarray345string);
+
+                for(String stringpart : Userlistarray345string)
                 {
+                    //System.out.println('1');
                     //User tempuser = new User();
                     //String tempstring = Userlistarray123string.get(j);
                     //String tempimg = tempstring.substring(tempstring.indexOf("Img"),tempstring.indexOf("userMsg"));
@@ -348,9 +416,15 @@ public class privatechatActivity extends Activity {
                     //tempuser.setUserImg(Integer.valueOf(tempimgnew));
                     //tempuser.setUserName(tempnamenew);
                     //Userlistarray123.add(tempuser);
-                    Userlistarray123.add(JSON.parseObject(Userlistarray123string.get(j), User.class));
+
+
+                    //System.out.println(JSON.parseObject(stringpart, User.class));
+                    //System.out.println(JSONArray.parseObject(stringpart, User.class));
+
+                    Userlistarray123.add(JSON.parseObject(stringpart, User.class));
+                    System.out.println(Userlistarray123);
                 }
-                System.out.println("114");
+
 
                 //String msg = "PerformanceManager[第1个中括号]Product[第2个中括号]<[第3个中括号]79~";
                 //List<String> list = extractMessageByRegular(msg);
