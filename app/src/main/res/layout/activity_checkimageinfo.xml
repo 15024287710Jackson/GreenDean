@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:padding="8dp"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/imageView_check"
+        android:layout_width="407dp"
+        android:layout_height="252dp"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="8dp" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="132dp"
+        android:text="TextView" />
+
+    <Button
+        android:id="@+id/next_picture_button"
+        android:layout_width="411dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="nextPic_info" />
+    <Button
+        android:id="@+id/del_picture_button"
+        android:layout_width="411dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="delete_picture" />
+
+
+</LinearLayout>

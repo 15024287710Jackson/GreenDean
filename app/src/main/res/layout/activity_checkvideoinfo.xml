@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:padding="8dp"
+    android:orientation="vertical" >
+
+    <VideoView
+        android:id="@+id/videoView_checkvideo"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:id="@+id/textView_videoUser"
+        android:layout_width="match_parent"
+        android:layout_height="156dp"
+        android:text="TextView" />
+    <Button
+        android:id="@+id/next_video_button"
+        android:layout_width="411dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="next video" />
+    <Button
+        android:id="@+id/del_video_button"
+        android:layout_width="411dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Delete video" />
+
+
+</LinearLayout>
