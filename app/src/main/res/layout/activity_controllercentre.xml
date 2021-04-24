@@ -11,12 +11,13 @@
         android:layout_width="260dp"
         android:layout_height="74dp"
         android:layout_marginStart="75dp"
-        android:layout_marginTop="88dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="76dp"
         android:gravity="center"
         android:text="To Picture"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,27 +26,58 @@
         android:layout_width="260dp"
         android:layout_height="74dp"
         android:layout_marginStart="81dp"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="56dp"
         android:layout_marginEnd="82dp"
-        android:text="To Video"
         android:gravity="center"
+        android:text="To Video"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_toPic" />
 
     <Button
+        android:id="@+id/button_checkimage"
+        android:layout_width="260dp"
+        android:layout_height="74dp"
+        android:layout_marginStart="83dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="89dp"
+        android:gravity="center"
+        android:text="Check Image"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_toVideo" />
+
+    <Button
+        android:id="@+id/button_checkvideo"
+        android:layout_width="260dp"
+        android:layout_height="74dp"
+        android:layout_marginStart="83dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="89dp"
+        android:gravity="center"
+        android:text="check Video"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_checkimage" />
+
+    <Button
         android:id="@+id/button_toChat"
         android:layout_width="260dp"
         android:layout_height="74dp"
         android:layout_marginStart="83dp"
-        android:layout_marginTop="79dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="89dp"
         android:gravity="center"
         android:text="Chat Room"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.38"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_toVideo" />
+        app:layout_constraintTop_toBottomOf="@+id/button_checkvideo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

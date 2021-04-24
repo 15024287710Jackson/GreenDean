@@ -67,9 +67,9 @@ public class LoginActivity extends AppCompatActivity {
                     new Thread() {
                         public void run() {
                             JSONObject jsonObject = loginSql(name, pwd);
-                            Looper.prepare();
                             try {
                                 if (jsonObject.getString("result").equals("Y")) {
+                                    Looper.prepare();
                                     Toast.makeText(LoginActivity.this, jsonObject.getString("msg"), Toast.LENGTH_LONG).show();
                                     login_result = 1;
                                     user_id = jsonObject.getString("id");
@@ -83,9 +83,10 @@ public class LoginActivity extends AppCompatActivity {
 //                                    bundle.putString("weight", weight);
                                     intent.putExtras(bundle);
                                     startActivity(intent);
+                                    Looper.loop();
 //                                    User user = new User(userId, userName);
 //                                    Intent intent = ChatActivity.newIntent(LoginActivity.this, user.toString());
-                                    startActivity(intent);
+//                                    startActivity(intent);
                                     LoginActivity.this.finish();
                                 } else {
                                     Toast.makeText(LoginActivity.this, jsonObject.getString("msg"), Toast.LENGTH_LONG).show();
@@ -93,7 +94,6 @@ public class LoginActivity extends AppCompatActivity {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            Looper.loop();
                         }
                     }.start();
 //                    new Thread(){

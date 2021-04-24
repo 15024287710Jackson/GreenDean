@@ -8,8 +8,11 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-feature android:name="android.hardware.camera"
+
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -19,12 +22,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GreenDean"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Controllercentre"></activity>
-        <activity android:name=".Updateimage" />
-        <activity android:name=".Updatevideo" />
+        <activity android:name=".Checkvideoinfo"></activity>
+        <activity android:name=".Checkimageinfo" />
+        <activity android:name=".Controllercentre" />
         <activity android:name=".Addimage" />
-        <activity android:name=".Addvideo"
-            android:hardwareAccelerated="true"></activity>
+        <activity
+            android:name=".Addvideo"
+            android:hardwareAccelerated="true" />
         <activity android:name=".ImageVideoInfo" />
         <activity android:name=".ChatActivity" />
         <activity android:name=".VideoActivity" />
@@ -37,7 +41,7 @@
         </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".privatechatActivity"/>
+        <activity android:name=".privatechatActivity" />
     </application>
 
 </manifest>

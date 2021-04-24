@@ -60,7 +60,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 
-public class Addimage extends AppCompatActivity implements View.OnClickListener, UploadUtil.OnUploadProcessListener {
+public class Addimage extends AppCompatActivity  {
 
     private static final String TAG = "uploadImage";
 
@@ -179,10 +179,7 @@ public class Addimage extends AppCompatActivity implements View.OnClickListener,
             }
         }
     }
-    @Override
-    public void onClick(View v) {
 
-    }
     public JSONObject post_file(final String url, final Map<String, Object> param, File file, String name, okhttp3.Callback callback) throws IOException, JSONException {
         JSONObject jsonObject = new JSONObject();
         OkHttpClient client = new OkHttpClient();
@@ -231,64 +228,7 @@ public class Addimage extends AppCompatActivity implements View.OnClickListener,
 //       client.newBuilder().readTimeout(50000, TimeUnit.MILLISECONDS).build().newCall(request).enqueue(callback);
     }
 
-    @Override
-    public void onUploadDone(int responseCode, String message) {
-        progressDialog.dismiss();
-        Message msg = Message.obtain();
-        msg.what = UPLOAD_FILE_DONE;
-        msg.arg1 = responseCode;
-        msg.obj = message;
-        handler.sendMessage(msg);
-    }
 
-    @Override
-    public void onUploadProcess(int uploadSize) {
-
-    }
-
-    @Override
-    public void initUpload(int fileSize) {
-
-    }
-    private void toUploadFile()
-    {
-        uploadImageResult.setText("正在上传中...");
-        progressDialog.setMessage("正在上传文件...");
-        progressDialog.show();
-        String fileKey = "pic";
-        UploadUtil uploadUtil = UploadUtil.getInstance();;
-        uploadUtil.setOnUploadProcessListener(this);  //设置监听器监听上传状态
-
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("id", "20210416214433675");
-        params.put("orderId", "11111");
-        uploadUtil.uploadFile( picPath,fileKey, requestURL,params);
-    }
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case TO_UPLOAD_FILE:
-                    toUploadFile();
-                    break;
-
-                case UPLOAD_INIT_PROCESS:
-                    progressBar.setMax(msg.arg1);
-                    break;
-                case UPLOAD_IN_PROCESS:
-                    progressBar.setProgress(msg.arg1);
-                    break;
-                case UPLOAD_FILE_DONE:
-                    String result = "响应码："+msg.arg1+"\n响应信息："+msg.obj+"\n耗时："+UploadUtil.getRequestTime()+"秒";
-                    uploadImageResult.setText(result);
-                    break;
-                default:
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-
-    };
 
 //    private static final String SD_PATH = "/sdcard/dskqxt/pic/";
 //    private static final String IN_PATH = "/dskqxt/pic/";
@@ -340,113 +280,5 @@ public class Addimage extends AppCompatActivity implements View.OnClickListener,
         return filePic.getAbsolutePath();
     }
 
-    private static final String CHARSET = "utf-8"; // 设置编码
-    private static final String CONTENT_TYPE = "multipart/form-data"; // 内容类型
-    private static final String BOUNDARY =  UUID.randomUUID().toString(); // 边界标识 随机生成
-    public String multipartRequest(String urlTo, Map<String, String> parmas, String filepath, String filefield, String fileMimeType) {
-        HttpURLConnection connection = null;
-        DataOutputStream outputStream = null;
-        InputStream inputStream = null;
 
-        String twoHyphens = "--";
-        String boundary = "*****" + Long.toString(System.currentTimeMillis()) + "*****";
-        String lineEnd = "\r\n";
-
-        String result = "";
-
-        int bytesRead, bytesAvailable, bufferSize;
-        byte[] buffer;
-        int maxBufferSize = 1 * 1024 * 1024;
-
-        String[] q = filepath.split("/");
-        int idx = q.length - 1;
-
-        try {
-            File file = new File(filepath);
-            FileInputStream fileInputStream = new FileInputStream(file);
-
-            URL url = new URL(urlTo);
-            connection = (HttpURLConnection) url.openConnection();
-
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-            connection.setUseCaches(false);
-
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Charset", CHARSET); // 设置编码
-            connection.setRequestProperty("connection", "keep-alive");
-            connection.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)");
-            connection.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
-
-            outputStream = new DataOutputStream(connection.getOutputStream());
-            outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-            outputStream.writeBytes("Content-Disposition: form-data; name=\"" + filefield + "\"; filename=\"" + file.getName() + "\"" + lineEnd);
-            outputStream.writeBytes("Content-Type: application/octet-stream" + lineEnd);
-//            outputStream.writeBytes("Content-Transfer-Encoding: binary" + lineEnd);
-            outputStream.writeBytes(lineEnd);
-            bytesAvailable = fileInputStream.available();
-            bufferSize = Math.min(bytesAvailable, maxBufferSize);
-            buffer = new byte[bufferSize];
-            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-            while (bytesRead > 0) {
-                outputStream.write(buffer, 0, bufferSize);
-                bytesAvailable = fileInputStream.available();
-                bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-            }
-            outputStream.writeBytes(lineEnd);
-            // Upload POST Data
-            Iterator<String> keys = parmas.keySet().iterator();
-            while (keys.hasNext()) {
-                String key = keys.next();
-                String value = parmas.get(key);
-                outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-                outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key + "\"" + lineEnd);
-                outputStream.writeBytes("Content-Type: text/plain" + lineEnd);
-                outputStream.writeBytes(lineEnd);
-                outputStream.writeBytes(value);
-                outputStream.writeBytes(lineEnd);
-            }
-
-            outputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
-            System.out.println(connection);
-
-            if (200 != connection.getResponseCode()) {
-//                throw new CustomException("Failed to upload code:" + connection.getResponseCode() + " " + connection.getResponseMessage());
-                System.out.println("Failed to upload code:" + connection.getResponseCode() + " " + connection.getResponseMessage());
-            }else{
-                inputStream = connection.getInputStream();
-                result = this.convertStreamToString(inputStream);
-                fileInputStream.close();
-                inputStream.close();
-                outputStream.flush();
-                outputStream.close();
-            }
-            return result;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    private String convertStreamToString(InputStream is) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-
-        String line = null;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return sb.toString();
-    }
 }

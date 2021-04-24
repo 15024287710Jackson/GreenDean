@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 public class Controllercentre extends AppCompatActivity {
-    Button button_toPic,button_toVideo,button_toChat;
+    Button button_toPic,button_toVideo,button_toChat,button_checkimage,button_checkvideo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +20,8 @@ public class Controllercentre extends AppCompatActivity {
         button_toPic = (Button)findViewById(R.id.button_toPic);
         button_toVideo = (Button)findViewById(R.id.button_toVideo);
         button_toChat = (Button)findViewById(R.id.button_toChat);
+        button_checkimage=(Button)findViewById(R.id.button_checkimage);
+        button_checkvideo=(Button)findViewById(R.id.button_checkvideo);
         button_toPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,6 +52,29 @@ public class Controllercentre extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        button_checkimage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),Checkimageinfo.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("userId", userId);
+                bundle.putString("userName", userName);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+        button_checkvideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),Checkvideoinfo.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("userId", userId);
+                bundle.putString("userName", userName);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
     }
 
 
