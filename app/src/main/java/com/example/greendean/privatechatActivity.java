@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -92,6 +93,7 @@ public class privatechatActivity extends Activity {
         }else {
             mUser = new User("0001","测试名字",R.drawable.boy);
         }
+
 
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -578,6 +580,10 @@ public class privatechatActivity extends Activity {
             output(user);
         }
     }
+
+
+
+
 
 
 

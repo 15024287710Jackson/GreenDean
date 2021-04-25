@@ -35,6 +35,8 @@ public class LoginActivity extends AppCompatActivity {
     String user_id;
     String account = "";
     String password = "";
+    //private SharedPreferences mSpf;
+
 
     public static Intent newIntent(Context context, String data){
         Intent intent = new Intent(context,LoginActivity.class);
@@ -58,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
                 String pwd;
                 name = user_name.getText().toString();
                 pwd = user_pwd.getText().toString();
+
                 if (name.equals("")) {
                     Toast.makeText(LoginActivity.this, R.string.input_name, Toast.LENGTH_LONG).show();
                 } else if (pwd.equals("")) {
@@ -76,11 +79,11 @@ public class LoginActivity extends AppCompatActivity {
                                     String userName = name;
                                     String userId = user_id;
                                     savePreferences(name, pwd);
+                                    saveIDpreferences(userId);
                                     Intent intent = new Intent(getApplicationContext(),Controllercentre.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putString("userId", userId);
                                     bundle.putString("userName", userName);
-//                                    bundle.putString("weight", weight);
                                     intent.putExtras(bundle);
                                     startActivity(intent);
                                     Looper.loop();
@@ -221,6 +224,8 @@ public class LoginActivity extends AppCompatActivity {
         pref.edit().putString("password", password).apply();
     }
 
+
+
     public void loadPreferences() {
         SharedPreferences pref = getSharedPreferences("GreenDeanAccountInfo", MODE_PRIVATE);
         account = pref.getString("account", "");
@@ -232,4 +237,11 @@ public class LoginActivity extends AppCompatActivity {
             user_pwd.setText(password);
         }
     }
+
+    public void saveIDpreferences(String userID)
+    {
+        SharedPreferences pref = getSharedPreferences("GreenDeanAccountInfo", MODE_PRIVATE);
+        pref.edit().putString("userid",userID).apply();
+    }
+
 }

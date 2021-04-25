@@ -41,7 +41,6 @@
                     android:layout_gravity="center"
                     android:layout_margin="5dp"
                     android:textSize="20dp"
-                    android:textColor="#F5EFEF"
                     android:text="我是一段文字一段文"
                     />
             </LinearLayout>
