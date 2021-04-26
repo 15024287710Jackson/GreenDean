@@ -66,7 +66,7 @@ public class privatechatActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_privatechat);
-        getActionBar().hide();
+        //getActionBar().hide();
         initView();
 
 

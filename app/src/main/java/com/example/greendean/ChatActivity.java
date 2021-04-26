@@ -46,7 +46,7 @@ public class ChatActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        getActionBar().hide();
+        //getActionBar().hide();
         initView();
 
 
