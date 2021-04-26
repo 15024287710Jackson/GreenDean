@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GreenDean</string>
+    <string name="app_name">Green Bean</string>
     <string name="account_hint">Please enter a user name</string>
     <string name="pwd_hint">Please enter your password</string>
     <string name="login">login</string>
