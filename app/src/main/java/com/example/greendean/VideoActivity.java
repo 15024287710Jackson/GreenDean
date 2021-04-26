@@ -35,6 +35,7 @@ public class VideoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
+        getSupportActionBar().hide();
         Bundle bundle = getIntent().getExtras();
         String userId = bundle.getString("userId");
         String userName =  bundle.getString("userName");

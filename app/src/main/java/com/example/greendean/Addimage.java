@@ -104,6 +104,7 @@ public class Addimage extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addimage);
+        getSupportActionBar().hide();
         take_pic_button = (Button) findViewById(R.id.button_takepic);
         upload_button = (Button) findViewById(R.id.upload_button);
         image = (ImageView) findViewById(R.id.imageView_pic);

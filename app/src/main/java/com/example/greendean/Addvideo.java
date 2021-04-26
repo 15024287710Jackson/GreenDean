@@ -49,6 +49,7 @@ public class Addvideo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addvideo);
+        getSupportActionBar().hide();
         Bundle bundle = getIntent().getExtras();
         String userId = bundle.getString("userId");
         String userName =  bundle.getString("userName");

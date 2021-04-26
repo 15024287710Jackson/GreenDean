@@ -32,6 +32,7 @@ public class ImageVideoInfo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_video_info);
+        getSupportActionBar().hide();
         next_button=(Button)findViewById(R.id.next_button);
         video_button = (Button) findViewById(R.id.video_button);
         add_image = (Button)findViewById(R.id.add_image);

@@ -41,6 +41,7 @@ public class Checkimageinfo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkimageinfo);
+        getSupportActionBar().hide();//这种方式默认式亮色主题
         next_picture_button= (Button)findViewById(R.id.next_picture_button);
         del_picture_button= (Button)findViewById(R.id.del_picture_button);
         imageView_check = (ImageView)findViewById(R.id.imageView_check);

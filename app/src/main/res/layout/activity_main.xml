@@ -6,32 +6,41 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <ImageView
+        android:layout_width="315dp"
+        android:layout_height="412dp"
+        android:src="@drawable/greenbean"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingTop="100dp" />
+
     <Button
         android:id="@+id/btn_main_login"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_marginTop="380dp"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="476dp"
         android:background="@drawable/shape_big_login_btn"
         android:text="@string/login"
         android:textColor="#ffffff"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.539"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btn_main_reg"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_marginTop="40dp"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="36dp"
         android:background="@drawable/shape_big_register_btn"
         android:text="@string/register"
         android:textColor="#ffffff"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.03"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/btn_main_login"
+        app:layout_constraintHorizontal_bias="0.681"
+        app:layout_constraintStart_toStartOf="@id/btn_main_login"
         app:layout_constraintTop_toBottomOf="@+id/btn_main_login" />
 
 
